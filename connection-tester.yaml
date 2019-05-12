@@ -26,6 +26,6 @@ spec:
           - name: Elastic__Url
             value: http://elastic:9200
           - name: Mongo__Url
-            value: mongodb://mongo-0.mongo:27017/dbname_?
+            value: mongodb://mongo-0.mongo:27017
         ports:
         - containerPort: 80
