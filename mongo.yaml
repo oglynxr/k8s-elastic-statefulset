@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: mongo
+        tier: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      nodeSelector:
+        tier: db
+      containers:
+        - name: mongo
+          image: us.gcr.io/oglynxr-cluster/mongo:4.0.9
+          command:
+            - mongod
+            - "--replSet"
+            - rs0
+            - "--smallfiles"
+            - "--noprealloc"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "100m"
+          ports:
+            - name: mongo
+              containerPort: 27017
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
