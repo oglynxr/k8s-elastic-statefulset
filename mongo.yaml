@@ -23,10 +23,8 @@ spec:
           image: us.gcr.io/oglynxr-cluster/mongo:4.0.9
           command:
             - mongod
-            - "--replSet"
-            - rs0
-            - "--smallfiles"
-            - "--noprealloc"
+            - "--bind_ip"
+            - "0.0.0.0"
           resources:
             limits:
               memory: "1Gi"
