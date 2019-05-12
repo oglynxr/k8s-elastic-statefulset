@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: connection-tester
+spec:
+  type: LoadBalancer
+  selector:
+    app: connection-tester
+  ports:
+  - port: 52000
+    targetPort: 80

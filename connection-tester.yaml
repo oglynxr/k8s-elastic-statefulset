@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connection-tester
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: connection-tester
+  template:
+    metadata:
+      labels:
+        app: connection-tester
+        tier: app
+    spec:
+      nodeSelector:
+        tier: app
+      containers:
+      - name: connection-tester
+        image: us.gcr.io/oglynxr-cluster/connection-tester:1.0.0
+        resources:
+          limits:
+              memory: "256Mi"
+              cpu: "200m"
+        env:
+          - name: Elastic__Url
+            value: http://elastic:9200
+          - name: Mongo__Url
+            value: mongodb://mongo-0.mongo:27017
+        ports:
+        - containerPort: 80
