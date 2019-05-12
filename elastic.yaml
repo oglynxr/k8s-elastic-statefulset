@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elastic
+spec:
+  serviceName: "elastic"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elastic
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: elastic
+        tier: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      nodeSelector:
+        tier: db
+      containers:
+        - name: elastic
+          image: us.gcr.io/oglynxr-cluster/elastic:6.3.0
+          env:
+            - name: discovery.type
+              value: single-node
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "200m"
+          ports:
+            - name: elastic-db
+              containerPort: 9200
+              protocol: TCP
+            - name: elastic-tp
+              containerPort: 9300
+              protocol: TCP
+          volumeMounts:
+            - name: elastic-persistent-storage-data
+              mountPath: /data
+            - name: elastic-persistent-storage-config
+              mountPath: /config
+  volumeClaimTemplates:
+    - metadata:
+        name: elastic-persistent-storage-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
+    - metadata:
+        name: elastic-persistent-storage-config
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 500Mi
