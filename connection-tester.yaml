@@ -17,7 +17,7 @@ spec:
         tier: app
       containers:
       - name: connection-tester
-        image: us.gcr.io/oglynxr-cluster/connection-tester:1.0.0
+        image: us.gcr.io/oglynxr-cluster/connection-tester:1.0.2
         resources:
           limits:
               memory: "256Mi"
